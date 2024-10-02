@@ -7,6 +7,7 @@ using api.Dtos.Stock;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -21,11 +22,12 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var stock = _context.Stocks.ToList()
-            .Select(s => s.ToStockDto());
-            return Ok(stock);
+            var stocks = await _context.Stocks.ToListAsync();
+
+            var stockDto = stocks.Select(s => s.ToStockDto());
+            return Ok(stocks);
         }
 
         [HttpGet("{id}")]
